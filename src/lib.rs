@@ -1,4 +1,4 @@
-#![no_std]
+#![cfg_attr(not(any(feature = "proptest", feature = "arbitrary")), no_std)]
 
 #[repr(u8)]
 #[derive(Clone, PartialEq, Eq, Debug)]
@@ -7,6 +7,9 @@
     derive(borsh::BorshDeserialize, borsh::BorshSerialize),
     borsh(use_discriminant = true)
 )]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "proptest", derive(proptest_derive::Arbitrary))]
+#[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
 pub enum Asset {
     USDC = 0,
     ARB = 1,
