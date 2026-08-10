@@ -1,11 +1,16 @@
 #![no_std]
 
 #[repr(u8)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq, Debug)]
+#[cfg_attr(
+    feature = "borsh",
+    derive(borsh::BorshDeserialize, borsh::BorshSerialize),
+    borsh(use_discriminant = true)
+)]
 pub enum Asset {
     USDC = 0,
     ARB = 1,
-    WETH = 2
+    WETH = 2,
 }
 
 const fn decode(x: &[u8]) -> [u8; 20] {
