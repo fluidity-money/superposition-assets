@@ -1,6 +1,6 @@
 [package]
 name = "superposition-assets"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2024"
 license = "MIT"
 description = "Superposition Assets supported on Arbitrum One."
@@ -8,7 +8,7 @@ homepage = "https://fluiditylabs.io"
 repository = "https://github.com/fluidity-money/superposition-assets"
 
 [dependencies]
-borsh = { version = "1.8.0", default-features = false, features = ["derive"], optional = true }
+borsh = { version = ">=1.8.0", default-features = false, features = ["derive"], optional = true }
 const-hex = { version = "1.19.1", default-features = false }
 
 [features]
