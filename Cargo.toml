@@ -11,7 +11,7 @@ repository = "https://github.com/fluidity-money/superposition-assets"
 arbitrary = { version = ">=1.4.0", features = ["derive"], optional = true }
 borsh = { version = ">=1.8.0", default-features = false, features = ["derive"], optional = true }
 const-hex = { version = "1.19.1", default-features = false }
-proptest = { version = "1.11.0", optional = true }
+proptest = { version = ">=1.0.0", optional = true }
 proptest-derive = { version = ">=0.8.0", optional = true }
 serde = { version = ">=1.0.0", default-features = false, features = ["alloc", "derive"], optional = true }
 
