@@ -80,6 +80,20 @@ impl Asset {
     pub fn from_str(x: &str) -> Self {
         x.into()
     }
+
+    pub fn try_from_str(x: &str) -> Result<Self, InvalidAsset> {
+        x.try_into().map_err(|_| InvalidAsset)
+    }
+
+    #[cfg(feature = "alloc")]
+    pub fn from_string(x: String) -> Self {
+        x.into()
+    }
+
+    #[cfg(feature = "alloc")]
+    pub fn try_from_string(x: String) -> Result<Self, InvalidAsset> {
+        x.try_into().map_err(|_| InvalidAsset)
+    }
 }
 
 impl From<&str> for Asset {
