@@ -23,13 +23,25 @@ const fn decode(x: &[u8]) -> [u8; 20] {
     }
 }
 
-impl From<Asset> for [u8; 20] {
-    fn from(x: Asset) -> Self {
-        match x {
+impl Asset {
+    fn addr(&self) -> [u8; 20] {
+        match self {
             Asset::USDC => decode(b"af88d065e77c8cC2239327C5EDb3A432268e5831"),
             Asset::ARB => decode(b"912ce59144191c1204e64559fe8253a0e49e6548"),
             Asset::WETH => decode(b"82af49447d8a07e3bd95bd0d56f35241523fbab1"),
         }
+    }
+}
+
+impl From<Asset> for [u8; 20] {
+    fn from(x: Asset) -> Self {
+        x.addr()
+    }
+}
+
+impl From<&Asset> for [u8; 20] {
+    fn from(x: &Asset) -> Self {
+        x.addr()
     }
 }
 
