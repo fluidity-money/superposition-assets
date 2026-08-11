@@ -1,5 +1,13 @@
 #![cfg_attr(not(any(feature = "proptest", feature = "arbitrary")), no_std)]
 
+#[cfg(feature = "alloc")]
+extern crate alloc;
+
+#[cfg(feature = "alloc")]
+use alloc::string::String;
+
+use core::str::FromStr;
+
 #[repr(u8)]
 #[derive(Clone, PartialEq, Eq, Debug)]
 #[cfg_attr(
@@ -45,8 +53,35 @@ impl From<&Asset> for [u8; 20] {
     }
 }
 
+#[cfg(feature = "alloc")]
+impl From<String> for Asset {
+    fn from(x: String) -> Self {
+        x.as_str().into()
+    }
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct InvalidAsset;
+
+impl FromStr for Asset {
+    type Err = InvalidAsset;
+
+    fn from_str(x: &str) -> Result<Self, Self::Err> {
+        match x {
+            "usdc" | "USDC" => Ok(Asset::USDC),
+            "arb" | "ARB" => Ok(Asset::ARB),
+            "weth" | "WETH" => Ok(Asset::WETH),
+            _ => Err(InvalidAsset),
+        }
+    }
+}
+
+impl From<&str> for Asset {
+    fn from(x: &str) -> Self {
+        x.parse()
+            .unwrap_or_else(|_| panic!("bad asset: {x}"))
+    }
+}
 
 impl TryFrom<u8> for Asset {
     type Error = InvalidAsset;
