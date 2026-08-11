@@ -63,6 +63,8 @@ impl From<String> for Asset {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct InvalidAsset;
 
+impl core::error::Error for InvalidAsset {}
+
 impl FromStr for Asset {
     type Err = InvalidAsset;
 
