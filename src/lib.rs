@@ -76,6 +76,12 @@ impl FromStr for Asset {
     }
 }
 
+impl Asset {
+    pub fn from_str(x: &str) -> Self {
+        x.into()
+    }
+}
+
 impl From<&str> for Asset {
     fn from(x: &str) -> Self {
         x.parse()
