@@ -9,7 +9,7 @@ use alloc::string::String;
 use core::str::FromStr;
 
 #[repr(u8)]
-#[derive(Clone, PartialEq, Eq, Debug)]
+#[derive(Clone, PartialEq, Eq, Debug, Copy)]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshDeserialize, borsh::BorshSerialize),
