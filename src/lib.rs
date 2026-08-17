@@ -32,7 +32,7 @@ const fn decode(x: &[u8]) -> [u8; 20] {
 }
 
 impl Asset {
-    fn addr(&self) -> [u8; 20] {
+    pub fn addr(&self) -> [u8; 20] {
         match self {
             Asset::USDC => decode(b"af88d065e77c8cC2239327C5EDb3A432268e5831"),
             Asset::ARB => decode(b"912ce59144191c1204e64559fe8253a0e49e6548"),
