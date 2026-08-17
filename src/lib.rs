@@ -10,6 +10,9 @@ use bobcat_maths::U;
 
 use core::str::FromStr;
 
+// BE MINDFUL that this should only ever be appended to with new items,
+// no deletion of existing items.
+
 #[repr(u8)]
 #[derive(Clone, PartialEq, Eq, Debug, Copy)]
 #[cfg_attr(
