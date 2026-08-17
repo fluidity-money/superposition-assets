@@ -6,6 +6,8 @@ extern crate alloc;
 #[cfg(feature = "alloc")]
 use alloc::string::String;
 
+use bobcat_maths::U;
+
 use core::str::FromStr;
 
 #[repr(u8)]
@@ -51,6 +53,12 @@ impl From<&Asset> for [u8; 20] {
     fn from(x: &Asset) -> Self {
         x.addr()
     }
+}
+
+impl Into<U> for Asset {
+     fn into(self) -> U {
+         U::from(self.addr())
+     }
 }
 
 #[cfg(feature = "alloc")]
