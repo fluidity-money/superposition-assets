@@ -26,7 +26,7 @@ func AssetFromString(x string) (Asset, error) {
 	}
 }
 
-func AssetToAddress(a Asset) string {
+func (a Asset) Address() string {
 	switch a {
 	case AssetUsdc:
 		return "0xaf88d065e77c8cC2239327C5EDb3A432268e5831"
