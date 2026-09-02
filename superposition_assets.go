@@ -1,5 +1,10 @@
 package superposition_assets
 
+import (
+	"strings"
+	"fmt"
+)
+
 type Asset uint8
 
 const (
@@ -22,7 +27,7 @@ func AssetFromString(x string) (Asset, error) {
 }
 
 func AssetToAddress(a Asset) string {
-	match a {
+	switch a {
 	case AssetUsdc:
 		return "0xaf88d065e77c8cC2239327C5EDb3A432268e5831"
 	case AssetArb:
@@ -30,4 +35,5 @@ func AssetToAddress(a Asset) string {
 	case AssetWeth:
 		return "0x82af49447d8a07e3bd95bd0d56f35241523fbab1";
 	}
+	return ""
 }
