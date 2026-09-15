@@ -8,6 +8,8 @@ use alloc::string::String;
 
 use bobcat_maths::U;
 
+use bobcat_cd::{EvmCdDeserialise, EvmCdSerialise};
+
 use core::str::FromStr;
 
 // BE MINDFUL that this should only ever be appended to with new items,
@@ -23,6 +25,11 @@ use core::str::FromStr;
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(proptest_derive::Arbitrary))]
 #[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
+#[cfg_attr(
+    feature = "evm-cd",
+    derive(EvmCdSerialise, EvmCdDeserialise),
+    evm_values
+)]
 pub enum Asset {
     USDC = 0,
     ARB = 1,
@@ -57,9 +64,9 @@ impl From<Asset> for [u8; 20] {
 }
 
 impl Into<U> for Asset {
-     fn into(self) -> U {
-         U::from(self.addr())
-     }
+    fn into(self) -> U {
+        U::from(self.addr())
+    }
 }
 
 #[cfg(feature = "alloc")]
@@ -115,8 +122,7 @@ impl Asset {
 
 impl From<&str> for Asset {
     fn from(x: &str) -> Self {
-        x.parse()
-            .unwrap_or_else(|_| panic!("bad asset: {x}"))
+        x.parse().unwrap_or_else(|_| panic!("bad asset: {x}"))
     }
 }
 
