@@ -29,7 +29,7 @@ func AssetFromString(x string) (Asset, error) {
 func (a Asset) Address() string {
 	switch a {
 	case AssetUsdc:
-		return "0xaf88d065e77c8cC2239327C5EDb3A432268e5831"
+		return "0xaf88d065e77c8cc2239327c5edb3a432268e5831"
 	case AssetArb:
 		return "0x912ce59144191c1204e64559fe8253a0e49e6548"
 	case AssetWeth:
