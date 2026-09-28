@@ -36,15 +36,14 @@ pub enum Asset {
     WETH = 2,
 }
 
-const fn decode(x: &[u8]) -> [u8; 20] {
-    match const_hex::const_decode_to_array::<20>(x) {
-        Ok(r) => r,
-        Err(_) => panic!(),
-    }
-}
-
 impl Asset {
     pub fn addr(self) -> [u8; 20] {
+        const fn decode(x: &[u8]) -> [u8; 20] {
+            match const_hex::const_decode_to_array::<20>(x) {
+                Ok(r) => r,
+                Err(_) => panic!(),
+            }
+        }
         match self {
             Asset::USDC => decode(b"af88d065e77c8cC2239327C5EDb3A432268e5831"),
             Asset::ARB => decode(b"912ce59144191c1204e64559fe8253a0e49e6548"),
@@ -139,6 +138,13 @@ impl TryFrom<u8> for Asset {
     }
 }
 
+impl TryFrom<U> for Asset {
+    type Error = InvalidAsset;
+
+    fn try_from(x: U) -> Result<Self, Self::Error> {
+       Self::try_from(x[31])
+    }
+}
 macro_rules! impl_asset_int {
     ($($ty:ty),* $(,)?) => {
         $(
