@@ -34,6 +34,7 @@ pub enum Asset {
     USDC = 0,
     ARB = 1,
     WETH = 2,
+    WBTC = 3
 }
 
 impl Asset {
@@ -48,6 +49,7 @@ impl Asset {
             Asset::USDC => decode(b"af88d065e77c8cC2239327C5EDb3A432268e5831"),
             Asset::ARB => decode(b"912ce59144191c1204e64559fe8253a0e49e6548"),
             Asset::WETH => decode(b"82af49447d8a07e3bd95bd0d56f35241523fbab1"),
+            Asset::WBTC => decode(b"2f2a2543b76a4166549f7aab2e75bef0aefc5b0f"),
         }
     }
 
@@ -94,6 +96,7 @@ impl FromStr for Asset {
             "usdc" | "USDC" => Ok(Asset::USDC),
             "arb" | "ARB" => Ok(Asset::ARB),
             "weth" | "WETH" => Ok(Asset::WETH),
+            "wbtc" | "WBTC" => Ok(Asset::WBTC),
             _ => Err(InvalidAsset),
         }
     }
@@ -117,13 +120,36 @@ impl Asset {
     pub fn try_from_string(x: String) -> Result<Self, InvalidAsset> {
         x.try_into().map_err(|_| InvalidAsset)
     }
+
+    /// Returns a string in a slice that's always 4 bytes (ARB is "ARB_").
+    pub const fn const_id(self) -> [u8; 4] {
+        let mut b = [0u8; 4];
+        b.copy_from_slice(match self {
+            Asset::USDC => "USDC",
+            Asset::ARB => "ARB_",
+            Asset::WETH => "WETH",
+            Asset::WBTC => "WBTC",
+        }.as_bytes());
+        b
+    }
 }
 
+impl Into<&str> for Asset {
+    fn into(self) -> &'static str {
+        match self {
+            Asset::USDC => "USDC",
+            Asset::ARB => "ARB",
+            Asset::WETH => "WETH",
+            Asset::WBTC => "WBTC",
+        }
+    }
+}
 impl From<&str> for Asset {
     fn from(x: &str) -> Self {
         x.parse().unwrap_or_else(|_| panic!("bad asset: {x}"))
     }
 }
+
 
 impl TryFrom<u8> for Asset {
     type Error = InvalidAsset;
