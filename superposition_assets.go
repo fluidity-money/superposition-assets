@@ -11,6 +11,7 @@ const (
 	AssetUsdc Asset = iota
 	AssetArb
 	AssetWeth
+	AssetUsdg
 )
 
 func AssetFromString(x string) (Asset, error) {
@@ -21,6 +22,8 @@ func AssetFromString(x string) (Asset, error) {
 		return AssetArb, nil
 	case "WETH":
 		return AssetWeth, nil
+	case "USDG":
+		return AssetUsdg, nil
 	default:
 		return 0, fmt.Errorf("unknown asset %q", x)
 	}

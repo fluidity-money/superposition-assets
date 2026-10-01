@@ -56,7 +56,7 @@ fn main() {
     };
 
     let generated = format!(
-        r#"use bobcat_sdk::maths::U;
+        r#"use bobcat_maths::U;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Version {{

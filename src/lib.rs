@@ -195,6 +195,7 @@ impl TryFrom<u8> for Asset {
             1 => Ok(Asset::ARB),
             2 => Ok(Asset::WETH),
             3 => Ok(Asset::WBTC),
+            4 => Ok(Asset::USDG),
             _ => Err(InvalidAsset),
         }
     }
