@@ -16,6 +16,8 @@ use bobcat_maths::U;
 
 use bobcat_cd::{EvmCdDeserialise, EvmCdSerialise};
 
+use stylus_robinhood_stock_tokens::StockToken::Spy as RobinhoodSpy;
+
 use core::str::FromStr;
 
 // BE MINDFUL that this should only ever be appended to with new items,
@@ -42,6 +44,7 @@ pub enum Asset {
     WETH = 2,
     WBTC = 3,
     USDG = 4,
+    SPY = 5,
 }
 
 #[repr(u8)]
@@ -62,6 +65,7 @@ pub enum Asset {
 pub enum Network {
     Arbitrum,
     Robinhood,
+    RobinhoodTestnet,
 }
 
 impl Asset {
@@ -99,6 +103,8 @@ impl Asset {
                 Some(decode(b"5fc5360d0400a0fd4f2af552add042d716f1d168"))
             }
             (Asset::ARB, Network::Robinhood) => None,
+            (Asset::SPY, Network::Arbitrum) => None,
+            (Asset::SPY, Network::Robinhood) => Some(RobinhoodSpy.addr())
         }
     }
 

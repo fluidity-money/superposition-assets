@@ -53,7 +53,19 @@ dependencies = [
  "array-concat",
  "bobcat-cd-derive",
  "bobcat-maths 0.10.1",
- "bobcat-storage",
+ "bobcat-storage 0.10.1",
+ "const-hex",
+]
+
+[[package]]
+name = "bobcat-cd"
+version = "0.11.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "25acd830eb63040da4edb2fac58cdbf2fdb6b9a8110de564bee6f71e56743d34"
+dependencies = [
+ "array-concat",
+ "bobcat-maths 0.11.4",
+ "bobcat-storage 0.11.4",
  "const-hex",
 ]
 
@@ -72,16 +84,6 @@ dependencies = [
 
 [[package]]
 name = "bobcat-host"
-version = "0.8.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a4bffd6509d0d678fe723c3afd8ed0fe4640276f904cdc83fcdbc0c5972cf6ad"
-dependencies = [
- "const-hex",
- "keccak-const",
-]
-
-[[package]]
-name = "bobcat-host"
 version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b0ec095127b2ddd63aee0e7d0b83e0ad175dbd5f8bcaf194be5b92fffdfd0abc"
@@ -91,19 +93,26 @@ dependencies = [
 ]
 
 [[package]]
-name = "bobcat-maths"
-version = "0.8.3"
+name = "bobcat-host"
+version = "0.11.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f9bf76e1353e2294b490d8fe16aedb991db2c100cb7bb8005bdf83f33f877bee"
+checksum = "11ff0de81cd5a3e7d7c2a24704abd09189bf5df9e44776e55f674d69f538f33f"
+dependencies = [
+ "const-hex",
+ "keccak-const",
+]
+
+[[package]]
+name = "bobcat-interfaces"
+version = "0.11.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "33d57bc230ab9aaed9bd3d0dfa022538a2e4add142840c41493f8926df8e3e89"
 dependencies = [
  "array-concat",
- "bobcat-host 0.8.3",
- "bobcat-panic 0.8.3",
- "cfg-if",
+ "bobcat-cd 0.11.4",
+ "bobcat-maths 0.11.4",
+ "bobcat-storage 0.11.4",
  "const-hex",
- "mutants",
- "num-traits",
- "paste",
 ]
 
 [[package]]
@@ -123,13 +132,18 @@ dependencies = [
 ]
 
 [[package]]
-name = "bobcat-panic"
-version = "0.8.3"
+name = "bobcat-maths"
+version = "0.11.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c1fcebe9755cc41412fe5884a418c443b42251b4ae0ea9abf501364ddadf0420"
+checksum = "25dc90b600ec7ff86ed490ec9fff128bbdbb50f5736ecf73062c310a212a422d"
 dependencies = [
- "bobcat-host 0.8.3",
+ "array-concat",
+ "bobcat-host 0.11.4",
+ "bobcat-panic 0.11.4",
+ "cfg-if",
  "const-hex",
+ "mutants",
+ "num-traits",
  "paste",
 ]
 
@@ -145,6 +159,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "bobcat-panic"
+version = "0.11.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ad3c2d4083fdf133def9c87af10771fd96d82526fa65acfb917a216054a3964e"
+dependencies = [
+ "bobcat-host 0.11.4",
+ "const-hex",
+ "paste",
+]
+
+[[package]]
 name = "bobcat-storage"
 version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -153,6 +178,19 @@ dependencies = [
  "array-concat",
  "bobcat-host 0.10.1",
  "bobcat-maths 0.10.1",
+ "keccak-const",
+ "paste",
+]
+
+[[package]]
+name = "bobcat-storage"
+version = "0.11.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "42f5219890c1b278ae4510121c1996a30182b6612a501e563dcd0e00810720a1"
+dependencies = [
+ "array-concat",
+ "bobcat-host 0.11.4",
+ "bobcat-maths 0.11.4",
  "keccak-const",
  "paste",
 ]
@@ -200,8 +238,6 @@ checksum = "33e2a781ebdf4467d1428dc4593067825fb646f6871475098d8577421af73558"
 dependencies = [
  "cfg-if",
  "cpufeatures",
- "proptest",
- "serde_core",
 ]
 
 [[package]]
@@ -532,17 +568,40 @@ dependencies = [
 ]
 
 [[package]]
+name = "stylus-chainlink-price-feeds"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e73869abae4ae4665b89819f87faf5431555f261d25878a919c364da18d78531"
+dependencies = [
+ "bobcat-cd 0.10.1",
+ "bobcat-interfaces",
+]
+
+[[package]]
+name = "stylus-robinhood-stock-tokens"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "73ad95b4c010dc5faeb2156b5a24fbba839c13c0c3a67411c425048f932acb45"
+dependencies = [
+ "bobcat-cd 0.10.1",
+ "bobcat-interfaces",
+ "bobcat-maths 0.10.1",
+ "stylus-chainlink-price-feeds",
+]
+
+[[package]]
 name = "superposition-assets"
 version = "0.6.0"
 dependencies = [
  "arbitrary",
- "bobcat-cd",
- "bobcat-maths 0.8.3",
+ "bobcat-cd 0.10.1",
+ "bobcat-maths 0.10.1",
  "borsh",
  "const-hex",
  "proptest",
  "proptest-derive",
  "serde",
+ "stylus-robinhood-stock-tokens",
 ]
 
 [[package]]

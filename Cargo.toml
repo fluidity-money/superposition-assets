@@ -16,6 +16,7 @@ proptest = { version = ">=1.0.0", optional = true }
 proptest-derive = { version = ">=0.8.0", optional = true }
 serde = { version = ">=1.0.0", default-features = false, features = ["alloc", "derive"], optional = true }
 bobcat-cd = { version = ">=0.10.1", default-features = false, features = ["derive"], optional = true }
+stylus-robinhood-stock-tokens = { version = ">=0.2.0", default-features = false }
 
 [features]
 default = ["alloc", "evm-cd"]
