@@ -13,7 +13,8 @@ enum Asset {
     USDC, // 0
     ARB,  // 1
     WETH, // 2
-    WBTC  // 3
+    WBTC, // 3
+    USDG  // 4
 }
 
 /// @notice Conversion helpers for the internal `Asset` enum: uint8 wire
@@ -24,7 +25,9 @@ enum Asset {
 /// @dev Address lookups are split into explicit per-network functions
 ///      (`addrArbitrum`, `addrRobinhood`) rather than a single network-switching
 ///      routine so the generated code is a flat, branch-free per-asset dispatch
-///      and never relies on the compiler inlining an internal switch.
+///      and never relies on the compiler inlining an internal switch. Assets
+///      that are not deployed on a given network (`None` in the Rust `addr`)
+///      revert with `AssetNotOnNetwork`.
 library LibSuperpositionAssets {
     error InvalidAsset();
     error AssetNotOnNetwork(Asset asset);
@@ -34,7 +37,7 @@ library LibSuperpositionAssets {
     ///         Equivalent to `TryFrom<u8> for Asset`. Appending a new asset to
     ///         `Asset` automatically widens the accepted range.
     function fromUint8(uint8 x) internal pure returns (Asset a) {
-        if (x > uint8(Asset.WBTC)) revert InvalidAsset();
+        if (x > uint8(Asset.USDG)) revert InvalidAsset();
         return Asset(x);
     }
 
@@ -52,18 +55,21 @@ library LibSuperpositionAssets {
         if (a == Asset.ARB) return 0x912CE59144191C1204E64559FE8253a0e49E6548;
         if (a == Asset.WETH) return 0x82aF49447D8a07e3bd95BD0d56f35241523fBab1;
         if (a == Asset.WBTC) return 0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f;
+        if (a == Asset.USDG) return 0x004B506865409877C9fA29bfb1ebA929984B9bbC;
         revert InvalidAsset();
     }
 
     /// @notice Resolves `a` to its token address on the Robinhood chain.
-    /// @dev    Mirrors `Asset::addr(self, Network::Robinhood)`. USDC and ARB are
-    ///         not deployed on Robinhood; the Rust code panics there, here we
-    ///         revert with `AssetNotOnNetwork`. Only WETH and WBTC exist.
+    /// @dev    Mirrors `Asset::addr(self, Network::Robinhood)` (returns `None`
+    ///         for undeployed assets). USDC and ARB are not deployed on
+    ///         Robinhood, so they revert with `AssetNotOnNetwork`. Only WETH,
+    ///         WBTC, and USDG exist there.
     function addrRobinhood(Asset a) internal pure returns (address) {
         if (a == Asset.USDC) revert AssetNotOnNetwork(a);
         if (a == Asset.ARB) revert AssetNotOnNetwork(a);
         if (a == Asset.WETH) return 0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73;
         if (a == Asset.WBTC) return 0x6bac06600D220Ac5Ac281AD1f504D2Cf0F90F6e6;
+        if (a == Asset.USDG) return 0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168;
         revert InvalidAsset();
     }
 }

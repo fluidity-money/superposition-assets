@@ -6,6 +6,12 @@ extern crate alloc;
 #[cfg(feature = "alloc")]
 use alloc::string::String;
 
+mod version;
+
+pub use version::Version;
+
+pub const VERSION_CURRENT: Version = Version::CURRENT;
+
 use bobcat_maths::U;
 
 use bobcat_cd::{EvmCdDeserialise, EvmCdSerialise};
