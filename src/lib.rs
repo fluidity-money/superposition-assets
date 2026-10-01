@@ -34,39 +34,59 @@ pub enum Asset {
     USDC = 0,
     ARB = 1,
     WETH = 2,
-    WBTC = 3
+    WBTC = 3,
+}
+
+#[repr(u8)]
+#[derive(Clone, PartialEq, Eq, Debug, Copy)]
+#[cfg_attr(
+    feature = "borsh",
+    derive(borsh::BorshDeserialize, borsh::BorshSerialize),
+    borsh(use_discriminant = true)
+)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "proptest", derive(proptest_derive::Arbitrary))]
+#[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
+#[cfg_attr(
+    feature = "evm-cd",
+    derive(EvmCdSerialise, EvmCdDeserialise),
+    evm_values
+)]
+pub enum Network {
+    Arbitrum,
+    Robinhood,
 }
 
 impl Asset {
-    pub fn addr(self) -> [u8; 20] {
+    pub fn addr(self, n: Network) -> [u8; 20] {
         const fn decode(x: &[u8]) -> [u8; 20] {
             match const_hex::const_decode_to_array::<20>(x) {
                 Ok(r) => r,
                 Err(_) => panic!(),
             }
         }
-        match self {
-            Asset::USDC => decode(b"af88d065e77c8cC2239327C5EDb3A432268e5831"),
-            Asset::ARB => decode(b"912ce59144191c1204e64559fe8253a0e49e6548"),
-            Asset::WETH => decode(b"82af49447d8a07e3bd95bd0d56f35241523fbab1"),
-            Asset::WBTC => decode(b"2f2a2543b76a4166549f7aab2e75bef0aefc5b0f"),
+        match (self, n) {
+            (Asset::USDC, Network::Arbitrum) => decode(b"af88d065e77c8cC2239327C5EDb3A432268e5831"),
+            (Asset::ARB, Network::Arbitrum) => decode(b"912ce59144191c1204e64559fe8253a0e49e6548"),
+            (Asset::WETH, Network::Arbitrum) => decode(b"82af49447d8a07e3bd95bd0d56f35241523fbab1"),
+            (Asset::WBTC, Network::Arbitrum) => decode(b"2f2a2543b76a4166549f7aab2e75bef0aefc5b0f"),
+            (Asset::USDC, Network::Robinhood) => {
+                decode(b"80e0e24718dbFcad49ECAA6F1e6C89A190586cA8")
+            }
+            (Asset::WETH, Network::Robinhood) => {
+                decode(b"0Bd7D308f8E1639FAb988df18A8011f41EAcAD73")
+            }
+            (Asset::WBTC, Network::Robinhood) => {
+                decode(b"6bac06600D220Ac5Ac281AD1f504D2Cf0F90F6e6")
+            }
+            (Asset::ARB, Network::Robinhood) => {
+                panic!("ARB is not deployed on Robinhood Chain")
+            }
         }
     }
 
-    pub fn u(self) -> U {
-        self.into()
-    }
-}
-
-impl From<Asset> for [u8; 20] {
-    fn from(x: Asset) -> Self {
-        x.addr()
-    }
-}
-
-impl Into<U> for Asset {
-    fn into(self) -> U {
-        U::from(self.addr())
+    pub fn u(self, n: Network) -> U {
+        U::from(self.addr(n))
     }
 }
 
@@ -124,12 +144,15 @@ impl Asset {
     /// Returns a string in a slice that's always 4 bytes (ARB is "ARB_").
     pub const fn const_id(self) -> [u8; 4] {
         let mut b = [0u8; 4];
-        b.copy_from_slice(match self {
-            Asset::USDC => "USDC",
-            Asset::ARB => "ARB_",
-            Asset::WETH => "WETH",
-            Asset::WBTC => "WBTC",
-        }.as_bytes());
+        b.copy_from_slice(
+            match self {
+                Asset::USDC => "USDC",
+                Asset::ARB => "ARB_",
+                Asset::WETH => "WETH",
+                Asset::WBTC => "WBTC",
+            }
+            .as_bytes(),
+        );
         b
     }
 }
@@ -150,7 +173,6 @@ impl From<&str> for Asset {
     }
 }
 
-
 impl TryFrom<u8> for Asset {
     type Error = InvalidAsset;
 
@@ -159,6 +181,7 @@ impl TryFrom<u8> for Asset {
             0 => Ok(Asset::USDC),
             1 => Ok(Asset::ARB),
             2 => Ok(Asset::WETH),
+            3 => Ok(Asset::WBTC),
             _ => Err(InvalidAsset),
         }
     }
@@ -168,7 +191,7 @@ impl TryFrom<U> for Asset {
     type Error = InvalidAsset;
 
     fn try_from(x: U) -> Result<Self, Self::Error> {
-       Self::try_from(x[31])
+        Self::try_from(x[31])
     }
 }
 macro_rules! impl_asset_int {
