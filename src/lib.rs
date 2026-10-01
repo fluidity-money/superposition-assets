@@ -35,6 +35,7 @@ pub enum Asset {
     ARB = 1,
     WETH = 2,
     WBTC = 3,
+    USDG = 4,
 }
 
 #[repr(u8)]
@@ -58,7 +59,7 @@ pub enum Network {
 }
 
 impl Asset {
-    pub fn addr(self, n: Network) -> [u8; 20] {
+    pub fn addr(self, n: Network) -> Option<[u8; 20]> {
         const fn decode(x: &[u8]) -> [u8; 20] {
             match const_hex::const_decode_to_array::<20>(x) {
                 Ok(r) => r,
@@ -66,27 +67,31 @@ impl Asset {
             }
         }
         match (self, n) {
-            (Asset::USDC, Network::Arbitrum) => decode(b"af88d065e77c8cC2239327C5EDb3A432268e5831"),
-            (Asset::ARB, Network::Arbitrum) => decode(b"912ce59144191c1204e64559fe8253a0e49e6548"),
-            (Asset::WETH, Network::Arbitrum) => decode(b"82af49447d8a07e3bd95bd0d56f35241523fbab1"),
-            (Asset::WBTC, Network::Arbitrum) => decode(b"2f2a2543b76a4166549f7aab2e75bef0aefc5b0f"),
+            (Asset::USDC, Network::Arbitrum) => Some(decode(b"af88d065e77c8cC2239327C5EDb3A432268e5831")),
+            (Asset::ARB, Network::Arbitrum) => Some(decode(b"912ce59144191c1204e64559fe8253a0e49e6548")),
+            (Asset::WETH, Network::Arbitrum) => Some(decode(b"82af49447d8a07e3bd95bd0d56f35241523fbab1")),
+            (Asset::WBTC, Network::Arbitrum) => Some(decode(b"2f2a2543b76a4166549f7aab2e75bef0aefc5b0f")),
+            (Asset::USDG, Network::Arbitrum) => Some(decode(b"004b506865409877c9fa29bfb1eba929984b9bbc")),
             (Asset::USDC, Network::Robinhood) => {
-                decode(b"80e0e24718dbFcad49ECAA6F1e6C89A190586cA8")
+                None
             }
             (Asset::WETH, Network::Robinhood) => {
-                decode(b"0Bd7D308f8E1639FAb988df18A8011f41EAcAD73")
+                Some(decode(b"0Bd7D308f8E1639FAb988df18A8011f41EAcAD73"))
             }
             (Asset::WBTC, Network::Robinhood) => {
-                decode(b"6bac06600D220Ac5Ac281AD1f504D2Cf0F90F6e6")
+                Some(decode(b"6bac06600D220Ac5Ac281AD1f504D2Cf0F90F6e6"))
+            }
+            (Asset::USDG, Network::Robinhood) => {
+                Some(decode(b"5fc5360d0400a0fd4f2af552add042d716f1d168"))
             }
             (Asset::ARB, Network::Robinhood) => {
-                panic!("ARB is not deployed on Robinhood Chain")
+                None
             }
         }
     }
 
-    pub fn u(self, n: Network) -> U {
-        U::from(self.addr(n))
+    pub fn u(self, n: Network) -> Option<U> {
+        self.addr(n).map(U::from)
     }
 }
 
@@ -150,6 +155,7 @@ impl Asset {
                 Asset::ARB => "ARB_",
                 Asset::WETH => "WETH",
                 Asset::WBTC => "WBTC",
+                Asset::USDG => "USDG"
             }
             .as_bytes(),
         );
@@ -164,6 +170,7 @@ impl Into<&str> for Asset {
             Asset::ARB => "ARB",
             Asset::WETH => "WETH",
             Asset::WBTC => "WBTC",
+            Asset::USDG => "USDG"
         }
     }
 }
