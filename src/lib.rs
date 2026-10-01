@@ -73,14 +73,22 @@ impl Asset {
             }
         }
         match (self, n) {
-            (Asset::USDC, Network::Arbitrum) => Some(decode(b"af88d065e77c8cC2239327C5EDb3A432268e5831")),
-            (Asset::ARB, Network::Arbitrum) => Some(decode(b"912ce59144191c1204e64559fe8253a0e49e6548")),
-            (Asset::WETH, Network::Arbitrum) => Some(decode(b"82af49447d8a07e3bd95bd0d56f35241523fbab1")),
-            (Asset::WBTC, Network::Arbitrum) => Some(decode(b"2f2a2543b76a4166549f7aab2e75bef0aefc5b0f")),
-            (Asset::USDG, Network::Arbitrum) => Some(decode(b"004b506865409877c9fa29bfb1eba929984b9bbc")),
-            (Asset::USDC, Network::Robinhood) => {
-                None
+            (Asset::USDC, Network::Arbitrum) => {
+                Some(decode(b"af88d065e77c8cC2239327C5EDb3A432268e5831"))
             }
+            (Asset::ARB, Network::Arbitrum) => {
+                Some(decode(b"912ce59144191c1204e64559fe8253a0e49e6548"))
+            }
+            (Asset::WETH, Network::Arbitrum) => {
+                Some(decode(b"82af49447d8a07e3bd95bd0d56f35241523fbab1"))
+            }
+            (Asset::WBTC, Network::Arbitrum) => {
+                Some(decode(b"2f2a2543b76a4166549f7aab2e75bef0aefc5b0f"))
+            }
+            (Asset::USDG, Network::Arbitrum) => {
+                Some(decode(b"004b506865409877c9fa29bfb1eba929984b9bbc"))
+            }
+            (Asset::USDC, Network::Robinhood) => None,
             (Asset::WETH, Network::Robinhood) => {
                 Some(decode(b"0Bd7D308f8E1639FAb988df18A8011f41EAcAD73"))
             }
@@ -90,9 +98,7 @@ impl Asset {
             (Asset::USDG, Network::Robinhood) => {
                 Some(decode(b"5fc5360d0400a0fd4f2af552add042d716f1d168"))
             }
-            (Asset::ARB, Network::Robinhood) => {
-                None
-            }
+            (Asset::ARB, Network::Robinhood) => None,
         }
     }
 
@@ -161,7 +167,7 @@ impl Asset {
                 Asset::ARB => "ARB_",
                 Asset::WETH => "WETH",
                 Asset::WBTC => "WBTC",
-                Asset::USDG => "USDG"
+                Asset::USDG => "USDG",
             }
             .as_bytes(),
         );
@@ -176,7 +182,7 @@ impl Into<&str> for Asset {
             Asset::ARB => "ARB",
             Asset::WETH => "WETH",
             Asset::WBTC => "WBTC",
-            Asset::USDG => "USDG"
+            Asset::USDG => "USDG",
         }
     }
 }
