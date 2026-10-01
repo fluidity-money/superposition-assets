@@ -18,7 +18,7 @@ use bobcat_cd::{EvmCdDeserialise, EvmCdSerialise};
 
 use stylus_robinhood_stock_tokens::StockToken::Spy as RobinhoodSpy;
 
-use core::str::FromStr;
+use core::{fmt::{Display, Result as FmtResult, Formatter}, str::FromStr};
 
 #[repr(u8)]
 #[derive(Clone, PartialEq, Eq, Debug, Copy)]
@@ -119,6 +119,12 @@ impl Asset {
     }
 }
 
+impl Display for Asset {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        write!(f, "{self:?}")
+    }
+}
+
 #[cfg(feature = "alloc")]
 impl From<String> for Asset {
     fn from(x: String) -> Self {
@@ -129,8 +135,8 @@ impl From<String> for Asset {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct InvalidAsset;
 
-impl core::fmt::Display for InvalidAsset {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+impl Display for InvalidAsset {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         write!(f, "{self:?}")
     }
 }
