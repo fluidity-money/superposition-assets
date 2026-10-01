@@ -14,7 +14,8 @@ enum Asset {
     ARB,  // 1
     WETH, // 2
     WBTC, // 3
-    USDG  // 4
+    USDG, // 4
+    SPY   // 5
 }
 
 /// @notice Conversion helpers for the internal `Asset` enum: uint8 wire
@@ -37,7 +38,7 @@ library LibSuperpositionAssets {
     ///         Equivalent to `TryFrom<u8> for Asset`. Appending a new asset to
     ///         `Asset` automatically widens the accepted range.
     function fromUint8(uint8 x) internal pure returns (Asset a) {
-        if (x > uint8(Asset.USDG)) revert InvalidAsset();
+        if (x > uint8(Asset.SPY)) revert InvalidAsset();
         return Asset(x);
     }
 
@@ -56,6 +57,7 @@ library LibSuperpositionAssets {
         if (a == Asset.WETH) return 0x82aF49447D8a07e3bd95BD0d56f35241523fBab1;
         if (a == Asset.WBTC) return 0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f;
         if (a == Asset.USDG) return 0x004B506865409877C9fA29bfb1ebA929984B9bbC;
+        if (a == Asset.SPY) revert AssetNotOnNetwork(a);
         revert InvalidAsset();
     }
 
@@ -70,6 +72,12 @@ library LibSuperpositionAssets {
         if (a == Asset.WETH) return 0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73;
         if (a == Asset.WBTC) return 0x6bac06600D220Ac5Ac281AD1f504D2Cf0F90F6e6;
         if (a == Asset.USDG) return 0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168;
+        if (a == Asset.SPY) return 0x117cc2133c37B721F49dE2A7a74833232B3B4C0C;
         revert InvalidAsset();
+    }
+
+    function addrRobinhoodTestnet(Asset a) internal pure returns (address) {
+        if (a == Asset.SPY) return 0x2541F59c5e47cC36eE1368d0F8B96360791D708f;
+        revert AssetNotOnNetwork(a);
     }
 }

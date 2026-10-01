@@ -13,6 +13,7 @@ const (
 	AssetWeth
 	AssetWbtc
 	AssetUsdg
+	AssetSpy
 )
 
 type Network uint8
@@ -20,6 +21,7 @@ type Network uint8
 const (
 	NetworkArbitrum Network = iota
 	NetworkRobinhood
+	NetworkRobinhoodTestnet
 )
 
 func (a Asset) String() string {
@@ -34,6 +36,8 @@ func (a Asset) String() string {
 		return "WBTC"
 	case AssetUsdg:
 		return "USDG"
+	case AssetSpy:
+		return "SPY"
 	}
 	return ""
 }
@@ -50,6 +54,8 @@ func AssetFromString(x string) (Asset, error) {
 		return AssetWbtc, nil
 	case "USDG":
 		return AssetUsdg, nil
+	case "SPY":
+		return AssetSpy, nil
 	default:
 		return 0, fmt.Errorf("unknown asset %q", x)
 	}
@@ -79,6 +85,13 @@ func (a Asset) Address(n Network) (string, bool) {
 			return "0x6bac06600d220ac5ac281ad1f504d2cf0f90f6e6", true
 		case AssetUsdg:
 			return "0x5fc5360d0400a0fd4f2af552add042d716f1d168", true
+		case AssetSpy:
+			return "0x117cc2133c37b721f49de2a7a74833232b3b4c0c", true
+		}
+	case NetworkRobinhoodTestnet:
+		switch a {
+		case AssetSpy:
+			return "0x2541f59c5e47cc36ee1368d0f8b96360791d708f", true
 		}
 	}
 	return "", false

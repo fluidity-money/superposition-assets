@@ -20,9 +20,6 @@ use stylus_robinhood_stock_tokens::StockToken::Spy as RobinhoodSpy;
 
 use core::str::FromStr;
 
-// BE MINDFUL that this should only ever be appended to with new items,
-// no deletion of existing items.
-
 #[repr(u8)]
 #[derive(Clone, PartialEq, Eq, Debug, Copy)]
 #[cfg_attr(
@@ -104,7 +101,16 @@ impl Asset {
             }
             (Asset::ARB, Network::Robinhood) => None,
             (Asset::SPY, Network::Arbitrum) => None,
-            (Asset::SPY, Network::Robinhood) => Some(RobinhoodSpy.addr())
+            (Asset::SPY, Network::Robinhood) => Some(RobinhoodSpy.addr()),
+            (Asset::USDC, Network::RobinhoodTestnet) => None,
+            (Asset::ARB, Network::RobinhoodTestnet) => None,
+            (Asset::WETH, Network::RobinhoodTestnet) => None,
+            (Asset::WBTC, Network::RobinhoodTestnet) => None,
+            (Asset::USDG, Network::RobinhoodTestnet) => None,
+            // This is not really the SPY token! This is a fake asset deployed by the Superposition team for Florin.
+            (Asset::SPY, Network::RobinhoodTestnet) => {
+                Some(decode(b"2541F59c5e47cC36eE1368d0F8B96360791D708f"))
+            }
         }
     }
 
@@ -140,6 +146,8 @@ impl FromStr for Asset {
             "arb" | "ARB" => Ok(Asset::ARB),
             "weth" | "WETH" => Ok(Asset::WETH),
             "wbtc" | "WBTC" => Ok(Asset::WBTC),
+            "usdg" | "USDG" => Ok(Asset::USDG),
+            "spy" | "SPY" => Ok(Asset::SPY),
             _ => Err(InvalidAsset),
         }
     }
@@ -164,7 +172,6 @@ impl Asset {
         x.try_into().map_err(|_| InvalidAsset)
     }
 
-    /// Returns a string in a slice that's always 4 bytes (ARB is "ARB_").
     pub const fn const_id(self) -> [u8; 4] {
         let mut b = [0u8; 4];
         b.copy_from_slice(
@@ -174,6 +181,7 @@ impl Asset {
                 Asset::WETH => "WETH",
                 Asset::WBTC => "WBTC",
                 Asset::USDG => "USDG",
+                Asset::SPY => "SPY_",
             }
             .as_bytes(),
         );
@@ -189,6 +197,7 @@ impl Into<&str> for Asset {
             Asset::WETH => "WETH",
             Asset::WBTC => "WBTC",
             Asset::USDG => "USDG",
+            Asset::SPY => "SPY",
         }
     }
 }
@@ -208,6 +217,7 @@ impl TryFrom<u8> for Asset {
             2 => Ok(Asset::WETH),
             3 => Ok(Asset::WBTC),
             4 => Ok(Asset::USDG),
+            5 => Ok(Asset::SPY),
             _ => Err(InvalidAsset),
         }
     }
